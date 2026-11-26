@@ -32,7 +32,12 @@ struct OperatorView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
+                // The header keeps its own height. Without this, on macOS 27.2 the header's two row
+                // OUTPUTS layout (a Grid, chosen under about 1580 pt of window) made the whole console
+                // report a small maximum height: the window showed it as a band across the middle, no
+                // picture, the rail cut off (found 2026-11-25, 5.5.4 and 5.6.1 alike).
                 headerBar
+                    .fixedSize(horizontal: false, vertical: true)
 
                 ARCTheme.divider.frame(height: 1)
 
