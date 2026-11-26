@@ -1,0 +1,51 @@
+name: ArcSwitcher
+options:
+  bundleIdPrefix: com.example.arc
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+
+targets:
+  ArcSwitcher:
+    type: application
+    supportedDestinations: [macOS]
+    sources:
+      - path: ArcSwitcher
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcSwitcher
+        PRODUCT_NAME: ARC Switcher
+        MARKETING_VERSION: "2.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: true
+        INFOPLIST_FILE: ArcSwitcher/Info.plist
+        INFOPLIST_KEY_NSHumanReadableCopyright: "Copyright © 2026 ARC Event Productions. We don't sell failure™."
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_HARDENED_RUNTIME: true
+        CODE_SIGN_ENTITLEMENTS: ArcSwitcher/ArcSwitcher.entitlements
+
+  ArcSwitcherTests:
+    type: bundle.unit-test
+    supportedDestinations: [macOS]
+    sources:
+      - path: ArcSwitcherTests
+    dependencies:
+      - target: ArcSwitcher
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcSwitcherTests
+        GENERATE_INFOPLIST_FILE: true
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/ARC Switcher.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ARC Switcher"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic

@@ -1,0 +1,20 @@
+[project]
+name = "arc-talk-edit"
+version = "0.0.1"
+description = "ARC Edit: talk/lecture edit pipeline (ingest, sync, scans, Resolve builders, review, deliver)"
+requires-python = ">=3.11"
+dependencies = ["numpy", "PyYAML"]
+
+[project.optional-dependencies]
+media = ["Pillow", "soundfile", "opencv-python"]
+classroom = ["scipy", "opencv-python", "torch", "torchvision", "pedalboard", "soundfile"]
+
+[project.scripts]
+arc-talk-edit = "arc_talk_edit.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["arc_talk_edit*"]

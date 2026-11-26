@@ -1,0 +1,41 @@
+# arc-live-captions configuration
+# Copy to config.yaml and edit.
+
+names_file: names/event_names.txt
+
+audio:
+  # null = default input. Run `python -m arc_captions --list-devices` to find a specific index.
+  device: null
+  sample_rate: 16000
+  chunk_seconds: 0.5
+
+whisper:
+  # tiny, base, small, medium, large-v2, large-v3, distil-large-v3
+  # On Mac Studio M3 Ultra, large-v3 is near realtime on CPU.
+  # On Mac Mini M4, use distil-large-v3 or medium.
+  model_size: large-v3
+  compute_type: int8
+  device: cpu
+  language: en
+  beam_size: 5
+  vad_filter: true
+
+streaming:
+  # How often to invoke Whisper, in seconds. Lower means lower latency, more CPU.
+  hop_seconds: 1.5
+  # Max audio buffer in seconds before forced trim, prevents unbounded growth on silence.
+  max_buffer_seconds: 30.0
+  # Minimum audio buffered before first transcription pass.
+  min_buffer_seconds: 3.0
+
+corrector:
+  enabled: true
+  # Studio, not the Mini: the Mini is the Home Assistant box (2026-08-22)
+  ollama_url: http://192.0.2.41:11434
+  model: qwen3.6:35b
+  timeout_s: 2.0
+
+ingestion:
+  # Set enabled to true and paste the POST URL from YouTube Studio.
+  enabled: false
+  youtube_url: ""

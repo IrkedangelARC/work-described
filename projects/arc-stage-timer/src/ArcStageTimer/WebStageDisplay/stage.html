@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>ARC Stage Timer</title>
+  <link rel="stylesheet" href="/stage.css">
+</head>
+<body>
+  <!-- Corner registration marks -->
+  <div class="corner-mark tl"></div>
+  <div class="corner-mark tr"></div>
+  <div class="corner-mark bl"></div>
+  <div class="corner-mark br"></div>
+
+  <div id="stage-container">
+    <!-- Timer mode -->
+    <div id="stage-timer" class="stage-mode active">
+      <div id="stage-cue-title" class="stage-cue-title"></div>
+      <div id="stage-next-up" class="stage-next-up"></div>
+      <div id="stage-countdown" class="stage-countdown"></div>
+      <div id="stage-progress" class="stage-progress">
+        <div id="stage-progress-fill" class="stage-progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Clock mode -->
+    <div id="stage-clock" class="stage-mode">
+      <div id="stage-clock-time" class="stage-clock-time"></div>
+      <div id="stage-clock-date" class="stage-clock-date"></div>
+    </div>
+
+    <!-- Hold mode -->
+    <div id="stage-hold" class="stage-mode">
+      <div class="stage-hold-logo">ARC STAGE TIMER</div>
+      <div class="stage-hold-divider"></div>
+      <div id="stage-hold-event" class="stage-hold-event"></div>
+    </div>
+
+    <!-- Bottom data strip -->
+    <div class="stage-data-strip">
+      <span id="stage-elapsed" class="elapsed"></span>
+      <span id="stage-mode-label" class="mode-indicator"></span>
+      <span class="arc-mark">ARC</span>
+    </div>
+  </div>
+
+  <!-- TEXT ALERT: full-width red banner across the top, stays until cleared (2026-09-24) -->
+  <div id="stage-alert-banner" class="stage-alert-banner">
+    <span class="stage-alert-tag">ALERT</span>
+    <span id="stage-alert-text" class="stage-alert-text"></span>
+  </div>
+
+  <!-- Message overlay -->
+  <div id="stage-message-overlay" class="stage-message-overlay"></div>
+
+  <!-- Flash overlay -->
+  <div id="stage-flash-overlay" class="stage-flash-overlay"></div>
+
+  <!-- Connection status indicator -->
+  <div id="connection-status" class="connection-status">CONNECTING</div>
+
+  <script src="/stage.js"></script>
+</body>
+</html>

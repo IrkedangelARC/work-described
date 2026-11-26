@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- The Guard holds the last frame over SDI through ARCDeckLink, whose bridge loads
+	     the Blackmagic DeckLinkAPI framework from /Library/Frameworks. Under the hardened
+	     runtime that needs library validation off, as in Presenter's own entitlements;
+	     without it the bridge reports "driver is not installed" (drill 2026-09-18 17:37). -->
+	<key>com.apple.security.cs.disable-library-validation</key>
+	<true/>
+</dict>
+</plist>

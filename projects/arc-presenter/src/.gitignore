@@ -1,0 +1,13 @@
+# Xcode build artifacts
+build/
+*.xcarchive
+*.xcuserdata
+DerivedData/
+*.ipa
+*.pkg
+
+# Profiling
+*.profraw
+
+# macOS
+.DS_Store

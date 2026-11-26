@@ -1,0 +1,143 @@
+name: ArcPresenter
+options:
+  bundleIdPrefix: com.example.arc
+  deploymentTarget:
+    macOS: "15.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+
+# V4.2: program output to a Blackmagic DeckLink / UltraStudio (SDI, HDMI) through
+# the shared ARCDeckLink package. Loads Desktop Video at runtime; without the
+# driver everything reports "not available" instead of failing to launch.
+packages:
+  ARCDeckLink:
+    path: ../arc-decklink-output
+  ARCShowFormat:
+    path: ../arc-show-format
+  ARCStyle:
+    path: ../arc-style
+
+targets:
+  ArcPresenter:
+    type: application
+    supportedDestinations: [macOS]
+    sources:
+      - path: ArcPresenter
+    dependencies:
+      - package: ARCDeckLink
+      - package: ARCShowFormat
+      - package: ARCStyle
+      - target: ArcPresenterGuard
+        embed: false
+    postBuildScripts:
+      - name: Embed ARC Presenter Guard
+        script: |
+          set -e
+          SRC="$BUILT_PRODUCTS_DIR/ARC Presenter Guard.app"
+          DST="$BUILT_PRODUCTS_DIR/$WRAPPER_NAME/Contents/Library"
+          mkdir -p "$DST"
+          rm -rf "$DST/ARC Presenter Guard.app"
+          ditto "$SRC" "$DST/ARC Presenter Guard.app"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcPresenter
+        PRODUCT_NAME: ARC Presenter
+        MARKETING_VERSION: "5.6.1"
+        CURRENT_PROJECT_VERSION: "27"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_HARDENED_RUNTIME: true
+        PRODUCT_MODULE_NAME: ArcPresenter
+        CODE_SIGN_ENTITLEMENTS: ArcPresenter/ArcPresenter.entitlements
+    info:
+      path: ArcPresenter/Info.plist
+      properties:
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        # MUSIC module: Core Audio process tap on the music app (System Audio Recording, asked once).
+        NSAppleEventsUsageDescription: "ARC Presenter starts and drives PowerPoint's slideshow from the clicker when a PowerPoint deck is live, and pauses the music app it was controlling when it quits, so nothing plays out loud in the room."
+        # V4: the composite switch streams PowerPoint's show window with ScreenCaptureKit (Screen Recording, asked once at park; the grant takes effect after a relaunch).
+        NSScreenCaptureUsageDescription: "ARC Presenter shows PowerPoint's slideshow on the program output by capturing its window when a PowerPoint deck is taken live."
+        NSAudioCaptureUsageDescription: "ARC Presenter takes walk-in and background music from the app playing it (Music, Chrome, QuickTime) so the technician can set its level, mute it and fade it from the console."
+        # The .arcdeck bundle is OURS: exported here so a fresh Mac knows it is a
+        # package (not a folder), the open panel can select it, and a Finder
+        # double-click opens it in Presenter. Capture imports the same identifier.
+        UTExportedTypeDeclarations:
+          - UTTypeIdentifier: "com.example.arc.arcdeck"
+            UTTypeDescription: "ARC Deck"
+            UTTypeConformsTo: ["com.apple.package", "public.content"]
+            UTTypeTagSpecification:
+              public.filename-extension: ["arcdeck"]
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: "ARC Deck"
+            CFBundleTypeRole: "Viewer"
+            LSHandlerRank: "Owner"
+            LSTypeIsPackage: true
+            LSItemContentTypes:
+              - "com.example.arc.arcdeck"
+          # a zipped deck (how Drive and AirDrop deliver a bundle): unpacked by DeckArchive
+          - CFBundleTypeName: "Zipped ARC Deck"
+            CFBundleTypeRole: "Viewer"
+            LSHandlerRank: "Alternate"
+            LSItemContentTypes:
+              - "public.zip-archive"
+          - CFBundleTypeName: "PDF Document"
+            CFBundleTypeRole: "Viewer"
+            LSHandlerRank: "Alternate"
+            LSItemContentTypes:
+              - "com.adobe.pdf"
+          - CFBundleTypeName: "Video"
+            CFBundleTypeRole: "Viewer"
+            LSHandlerRank: "Alternate"
+            LSItemContentTypes:
+              - "public.movie"
+              - "com.apple.quicktime-movie"
+              - "public.mpeg-4"
+              - "public.avi"
+
+  ArcPresenterGuard:
+    type: application
+    supportedDestinations: [macOS]
+    sources:
+      - path: ArcPresenterGuard
+    dependencies:
+      - package: ARCDeckLink
+    settings:
+      base:
+        SKIP_INSTALL: YES   # embedded in the app; as a second product it made the archive "generic" and export refused every method (Xcode 27, 2026-09-19)
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcPresenterGuard
+        PRODUCT_NAME: ARC Presenter Guard
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_HARDENED_RUNTIME: true
+        GENERATE_INFOPLIST_FILE: true
+        INFOPLIST_KEY_LSUIElement: true
+        CODE_SIGN_ENTITLEMENTS: ArcPresenterGuard/ArcPresenterGuard.entitlements
+        INFOPLIST_KEY_NSHumanReadableCopyright: "Copyright (c) 2026 ARC Event Productions. We don't sell failure™."
+        SWIFT_VERSION: "5"
+  ArcPresenterTests:
+    type: bundle.unit-test
+    supportedDestinations: [macOS]
+    sources:
+      - path: ArcPresenterTests
+    dependencies:
+      - target: ArcPresenter
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcPresenterTests
+        GENERATE_INFOPLIST_FILE: true
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/ARC Presenter.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ARC Presenter"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic

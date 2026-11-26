@@ -1,0 +1,28 @@
+# Xcode
+build/
+DerivedData/
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+*.pbxuser
+*.perspectivev3
+
+# Swift Package Manager
+.build/
+Package.resolved
+
+# Node (Companion module)
+companion-module/node_modules/
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# Profiling artifacts
+*.profraw
+
+# Claude session state (local only)
+.claude/
+.claude-session-continuation.md
+dist/

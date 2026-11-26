@@ -1,0 +1,4 @@
+flask>=3.0
+flask-socketio>=5.3
+sounddevice>=0.4
+numpy>=1.24

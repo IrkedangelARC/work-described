@@ -1,0 +1,79 @@
+name: ArcStageTimer
+options:
+  bundleIdPrefix: com.example.arc
+  deploymentTarget:
+    iOS: "17.0"
+    macOS: "14.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+packages:
+  ARCDeckLink:
+    path: ../arc-decklink-output
+  ARCStyle:
+    path: ../arc-style
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    INFOPLIST_KEY_UIApplicationSceneManifest_Generation: false
+    INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: true
+    INFOPLIST_KEY_UILaunchScreen_Generation: true
+    INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+    INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+
+targets:
+  ArcStageTimer:
+    type: application
+    supportedDestinations: [iOS, macOS]
+    sources:
+      - path: ArcStageTimer
+      - path: sample_ros.json
+        type: file
+        buildPhase: resources
+      - path: test_ros_offset.json
+        type: file
+        buildPhase: resources
+      - path: ArcStageTimer/WebStageDisplay
+        type: folder
+        buildPhase: resources
+    dependencies:
+      # DeckLink fill+key output (ATEM over Thunderbolt) — macOS only.
+      # The package requires macOS 14 / ScreenCaptureKit; the iOS build must
+      # never link it. All consuming code is wrapped in #if os(macOS).
+      - package: ARCDeckLink
+        destinationFilters: [macOS]
+      # The ONE copy of ARC Style (iOS and macOS): tokens, module chrome, the console type rule.
+      - package: ARCStyle
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcStageTimer
+        PRODUCT_NAME: ARC Stage Timer
+        MARKETING_VERSION: "1.3.8"
+        CURRENT_PROJECT_VERSION: "12"
+        GENERATE_INFOPLIST_FILE: true
+        INFOPLIST_FILE: ArcStageTimer/Info.plist
+        INFOPLIST_KEY_NSHumanReadableCopyright: "Copyright © 2026 ARC Event Productions. We don't sell failure™."
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_HARDENED_RUNTIME: true
+
+  ArcStageTimerTests:
+    type: bundle.unit-test
+    supportedDestinations: [iOS, macOS]
+    sources:
+      - path: ArcStageTimerTests
+    dependencies:
+      - target: ArcStageTimer
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcStageTimerTests
+        GENERATE_INFOPLIST_FILE: true
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/ARC Stage Timer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ARC Stage Timer"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic

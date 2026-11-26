@@ -1,0 +1,18 @@
+# Xcode build artifacts
+build/
+*.xcarchive
+*.xcuserdata
+DerivedData/
+*.ipa
+*.pkg
+
+# Profiling
+*.profraw
+
+# macOS
+.DS_Store
+
+# xcodegen generates the project; commit it for parity with other ARC apps
+# (do NOT add ArcPresoCapture.xcodeproj to ignore)
+
+xcuserdata/

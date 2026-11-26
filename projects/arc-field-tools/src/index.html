@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ARC Tools">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>ARC Field Tools</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="app-logo">ARC <span>Field Tools</span></div>
+    <span id="offline-badge" class="offline-badge">OFFLINE</span>
+  </header>
+
+  <!-- Tab Navigation -->
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="color-temp">Color Temp</button>
+    <button class="tab-btn" data-tab="power-calc">Power</button>
+    <button class="tab-btn" data-tab="cable-ref">Cables</button>
+    <button class="tab-btn" data-tab="rf-coord">RF</button>
+  </nav>
+
+  <!-- ============================================ -->
+  <!-- TOOL 1: COLOR TEMPERATURE MATCHER            -->
+  <!-- ============================================ -->
+  <section id="panel-color-temp" class="tool-panel active">
+    <h2 class="tool-title">Color Temperature Matcher</h2>
+    <p class="tool-desc">Match LED fixtures to venue ambient lighting. Set target Kelvin and read DMX values per fixture.</p>
+
+    <!-- Kelvin Slider -->
+    <div class="card">
+      <div class="slider-container">
+        <div class="slider-value" id="kelvin-value">3200<span>K</span></div>
+        <input type="range" id="kelvin-slider" min="1000" max="10000" step="50" value="3200">
+      </div>
+
+      <!-- Color Swatch -->
+      <div class="color-swatch" id="color-swatch" style="margin:12px 0"></div>
+
+      <!-- Presets -->
+      <div class="btn-group" style="margin-top:12px">
+        <button class="preset-btn kelvin-preset" data-kelvin="2700">Tungsten 2700K</button>
+        <button class="preset-btn kelvin-preset active" data-kelvin="3200">Halogen 3200K</button>
+        <button class="preset-btn kelvin-preset" data-kelvin="4100">Fluoro 4100K</button>
+        <button class="preset-btn kelvin-preset" data-kelvin="5600">Daylight 5600K</button>
+        <button class="preset-btn kelvin-preset" data-kelvin="6500">Overcast 6500K</button>
+      </div>
+    </div>
+
+    <!-- Fixture DMX Table -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">DMX Values by Fixture</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Fixture</th>
+              <th>Color System</th>
+              <th>DMX Channel Values</th>
+            </tr>
+          </thead>
+          <tbody id="fixture-dmx-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- TOOL 2: POWER / CIRCUIT CALCULATOR           -->
+  <!-- ============================================ -->
+  <section id="panel-power-calc" class="tool-panel">
+    <h2 class="tool-title">Power / Circuit Calculator</h2>
+    <p class="tool-desc">Calculate circuit loads. Tap equipment to add to a circuit. Don't trip breakers.</p>
+
+    <div class="grid-2">
+      <!-- Left: Equipment List -->
+      <div>
+        <div class="flex-between mb-8">
+          <span class="card-title">Equipment</span>
+        </div>
+        <div id="power-equip-list" style="max-height:60vh;overflow-y:auto"></div>
+      </div>
+
+      <!-- Right: Circuits -->
+      <div>
+        <div class="flex-between mb-8">
+          <span class="card-title">Circuits</span>
+          <button class="btn btn-sm btn-accent" id="add-circuit-btn">+ Circuit</button>
+        </div>
+        <div id="power-circuit-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- TOOL 3: CABLE & CONNECTOR REFERENCE          -->
+  <!-- ============================================ -->
+  <section id="panel-cable-ref" class="tool-panel">
+    <h2 class="tool-title">Cable & Connector Reference</h2>
+    <p class="tool-desc">Signal types, connectors, pin-outs, max lengths, and adapter compatibility.</p>
+
+    <!-- Search -->
+    <div class="search-container">
+      <span class="search-icon">&#9906;</span>
+      <input type="text" class="search-input" id="cable-search" placeholder="Search signals, connectors, cables...">
+    </div>
+
+    <!-- Category Filter -->
+    <div class="btn-group mb-16">
+      <button class="preset-btn cable-cat-btn active" data-category="all">All</button>
+      <button class="preset-btn cable-cat-btn" data-category="video">Video</button>
+      <button class="preset-btn cable-cat-btn" data-category="audio">Audio</button>
+      <button class="preset-btn cable-cat-btn" data-category="data">Data</button>
+      <button class="preset-btn cable-cat-btn" data-category="power">Power</button>
+    </div>
+
+    <!-- Signal Cards -->
+    <div id="cable-cards"></div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- TOOL 4: RF FREQUENCY COORDINATOR             -->
+  <!-- ============================================ -->
+  <section id="panel-rf-coord" class="tool-panel">
+    <h2 class="tool-title">RF Frequency Coordinator</h2>
+    <p class="tool-desc">Find clean wireless frequencies. Enter occupied frequencies, analyze for IMD conflicts.</p>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Occupied Frequencies</span>
+        <div style="display:flex;gap:6px">
+          <select class="form-select" id="rf-preset-select" style="width:auto;font-size:0.7rem;padding:4px 8px">
+            <option value="">Load Preset...</option>
+          </select>
+          <button class="btn btn-sm" id="rf-save-preset-btn">Save</button>
+        </div>
+      </div>
+
+      <!-- Frequency Input -->
+      <div class="freq-input-row">
+        <input type="number" class="form-input" id="rf-freq-input"
+               placeholder="Enter MHz (e.g. 537.200)"
+               step="0.025" min="470" max="698"
+               inputmode="decimal"
+               style="flex:1">
+        <button class="btn btn-accent" id="rf-add-btn">Add</button>
+      </div>
+
+      <!-- Frequency Tags -->
+      <div class="freq-list" id="rf-freq-list">
+        <span class="text-dim" style="font-size:0.7rem">No frequencies added</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="btn-group mt-8">
+        <button class="btn btn-accent" id="rf-analyze-btn">Analyze</button>
+        <button class="btn" id="rf-clear-btn">Clear All</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="card mt-8">
+      <div class="card-header">
+        <span class="card-title">Analysis Results</span>
+      </div>
+      <div id="rf-results">
+        <div class="text-dim text-center" style="font-size:0.7rem;padding:20px 0">Add frequencies and tap Analyze</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scripts: Data first, then tools, then app shell -->
+  <script src="data/fixtures.js"></script>
+  <script src="data/signals.js"></script>
+  <script src="data/equipment-power.js"></script>
+  <script src="data/rf-presets.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/color-temp.js"></script>
+  <script src="js/cable-ref.js"></script>
+  <script src="js/power-calc.js"></script>
+  <script src="js/rf-coordinator.js"></script>
+
+</body>
+</html>

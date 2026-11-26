@@ -1,0 +1,8 @@
+build/
+*.xcodeproj/
+xcuserdata/
+.DS_Store
+windows/**/bin/
+windows/**/obj/
+windows/**/publish/
+__pycache__/

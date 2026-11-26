@@ -1,0 +1,48 @@
+name: ArcDictate
+options:
+  bundleIdPrefix: com.example.arc
+  deploymentTarget:
+    macOS: "15.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+
+targets:
+  ArcDictate:
+    type: application
+    supportedDestinations: [macOS]
+    sources:
+      - path: ArcDictate
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcDictate
+        PRODUCT_NAME: ARC Dictate
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        MARKETING_VERSION: "1.0.1"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: false
+        INFOPLIST_FILE: ArcDictate/Info.plist
+        DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_HARDENED_RUNTIME: true
+        CODE_SIGN_ENTITLEMENTS: ArcDictate/ArcDictate.entitlements
+
+  ArcDictateTests:
+    type: bundle.unit-test
+    supportedDestinations: [macOS]
+    sources:
+      - path: ArcDictateTests
+    dependencies:
+      - target: ArcDictate
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcDictateTests
+        GENERATE_INFOPLIST_FILE: true
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/ARC Dictate.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ARC Dictate"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic

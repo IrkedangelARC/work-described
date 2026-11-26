@@ -1,0 +1,60 @@
+name: ArcPresenterBasic
+options:
+  bundleIdPrefix: com.example.arc
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+
+targets:
+  ArcPresenterBasic:
+    type: application
+    supportedDestinations: [macOS]
+    sources:
+      - path: ArcPresenterBasic
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcPresenterBasic
+        PRODUCT_NAME: ARC Presenter Basic
+        MARKETING_VERSION: "1.0.2"
+        CURRENT_PROJECT_VERSION: "3"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_HARDENED_RUNTIME: true
+        PRODUCT_MODULE_NAME: ArcPresenterBasic
+        CODE_SIGN_ENTITLEMENTS: ArcPresenterBasic/ArcPresenterBasic.entitlements
+    info:
+      path: ArcPresenterBasic/Info.plist
+      properties:
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: "PDF Document"
+            CFBundleTypeRole: "Viewer"
+            LSHandlerRank: "Alternate"
+            LSItemContentTypes:
+              - "com.adobe.pdf"
+
+  ArcPresenterBasicTests:
+    type: bundle.unit-test
+    supportedDestinations: [macOS]
+    sources:
+      - path: ArcPresenterBasicTests
+    dependencies:
+      - target: ArcPresenterBasic
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcPresenterBasicTests
+        GENERATE_INFOPLIST_FILE: true
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/ARC Presenter Basic.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ARC Presenter Basic"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic

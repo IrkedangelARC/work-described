@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.hardened-runtime</key>
+	<true/>
+	<!-- Hardened runtime: Core Audio input (the MUSIC process tap arrives as aggregate-device input) -->
+	<key>com.apple.security.device.audio-input</key>
+	<true/>
+	<!-- MUSIC: pause the tapped app on quit over Apple Events -->
+	<key>com.apple.security.automation.apple-events</key>
+	<true/>
+	<!-- V4.2 DeckLink: Desktop Video's DeckLinkAPI.framework is Blackmagic-signed and loaded
+	     at runtime (CFBundle); under the hardened runtime that load is refused without this,
+	     and the app reports "driver not installed" while it plainly is (arc-keyer carries the same). -->
+	<key>com.apple.security.cs.disable-library-validation</key>
+	<true/>
+</dict>
+</plist>

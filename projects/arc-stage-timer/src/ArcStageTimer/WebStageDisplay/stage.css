@@ -1,0 +1,426 @@
+:root {
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+  --font-sans: -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  --timer-green: #00C853;
+  --timer-yellow: #FFD600;
+  --timer-red: #FF1744;
+  --accent: #E09143;           /* was cyan #33D9F5; ARC has no cyan (arc-style/brand/arc_brand.json) */
+  --arc-red: #C1272D;
+  --sec-orange: #E09143;       /* OPERATE: the cue the operator is running */
+  --sec-blue: #5B8DD9;         /* IN: what comes next */
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255,255,255,0.5);
+  --text-tertiary: rgba(255,255,255,0.25);
+  --surface: rgba(255,255,255,0.03);
+  --grid-line: rgba(255,255,255,0.02);
+  --border-subtle: rgba(255,255,255,0.06);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #080808;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+}
+
+/* Faint scanline texture — control room feel */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255,255,255,0.008) 2px,
+    rgba(255,255,255,0.008) 4px
+  );
+  pointer-events: none;
+  z-index: 50;
+}
+
+#stage-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* ARC red accent line — top brand marker */
+#stage-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--arc-red) 15%,
+    var(--arc-red) 85%,
+    transparent 100%
+  );
+  z-index: 5;
+}
+
+/* Corner registration marks — production DNA */
+.corner-mark {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  z-index: 5;
+  pointer-events: none;
+}
+.corner-mark::before,
+.corner-mark::after {
+  content: '';
+  position: absolute;
+  background: var(--text-tertiary);
+}
+.corner-mark::before { /* horizontal stroke */ }
+.corner-mark::after { /* vertical stroke */ }
+
+.corner-mark.tl { top: 16px; left: 16px; }
+.corner-mark.tl::before { top: 0; left: 0; width: 24px; height: 1px; }
+.corner-mark.tl::after { top: 0; left: 0; width: 1px; height: 24px; }
+
+.corner-mark.tr { top: 16px; right: 16px; }
+.corner-mark.tr::before { top: 0; right: 0; width: 24px; height: 1px; }
+.corner-mark.tr::after { top: 0; right: 0; width: 1px; height: 24px; }
+
+.corner-mark.bl { bottom: 16px; left: 16px; }
+.corner-mark.bl::before { bottom: 0; left: 0; width: 24px; height: 1px; }
+.corner-mark.bl::after { bottom: 0; left: 0; width: 1px; height: 24px; }
+
+.corner-mark.br { bottom: 16px; right: 16px; }
+.corner-mark.br::before { bottom: 0; right: 0; width: 24px; height: 1px; }
+.corner-mark.br::after { bottom: 0; right: 0; width: 1px; height: 24px; }
+
+/* Stage modes */
+.stage-mode {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+.stage-mode.active { display: flex; }
+
+/* Timer layout — proportional zones */
+#stage-timer {
+  justify-content: flex-start;
+}
+
+/* Top zone — cue info, 20%. THE BRACKET on the stage (2026-09-18): the cue title sits in one bar,
+   a flat orange NOW tag at its left end and a 2 px orange rule under it; NEXT gets a flat blue tag.
+   The console's colours read from thirty feet; the number below stays alone. */
+.stage-cue-title {
+  font-size: clamp(16px, 2.5vw, 48px);
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: var(--text-primary);
+  text-align: left;
+  padding: 0 0 0.25em 0;
+  margin: 3vh 4vw 0;
+  width: 92vw;
+  max-width: 92vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-bottom: 2px solid var(--sec-orange);
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  transition: opacity 0.3s ease;
+}
+.stage-cue-title::before {
+  content: 'NOW';
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.42em;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #0B0B0C;
+  background: var(--sec-orange);
+  padding: 0.45em 0.8em;
+  border-radius: 4px 0 0 4px;
+}
+.stage-cue-title:empty { border-bottom-color: transparent; }
+.stage-cue-title:empty::before { visibility: hidden; }
+
+.stage-next-up {
+  font-size: clamp(11px, 1.5vw, 28px);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin: 6px 4vw 0;
+  width: 92vw;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  transition: opacity 0.3s ease;
+}
+.stage-next-up::before {
+  content: 'NEXT';
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.6em;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #0B0B0C;
+  background: var(--sec-blue);
+  padding: 0.4em 0.7em;
+  border-radius: 4px 0 0 4px;
+}
+.stage-next-up:empty::before { visibility: hidden; }
+
+/* Center zone — countdown, 60% */
+.stage-countdown {
+  font-family: var(--font-mono);
+  font-size: clamp(40px, 12vw, 220px);
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-align: center;
+  transition: color 0.3s ease;
+  margin-top: 2vh;
+}
+
+.stage-countdown.overtime {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Progress bar — engineered look */
+.stage-progress {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  right: 40px;
+  height: clamp(4px, 1vh, 8px);
+  background: var(--surface);
+  border-radius: 1px;
+}
+
+.stage-progress-fill {
+  height: 100%;
+  border-radius: 1px;
+  transition: width 0.25s linear, background-color 0.3s ease;
+}
+
+/* Bottom data strip — elapsed, mode, ARC mark */
+.stage-data-strip {
+  position: absolute;
+  bottom: 12px;
+  left: 40px;
+  right: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 0.9vw, 14px);
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: var(--text-tertiary);
+  z-index: 5;
+}
+
+.stage-data-strip .mode-indicator {
+  text-transform: uppercase;
+}
+
+.stage-data-strip .arc-mark {
+  color: var(--arc-red);
+  opacity: 0.6;
+  letter-spacing: 2px;
+}
+
+.stage-data-strip .elapsed {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Clock mode */
+.stage-clock-time {
+  font-family: var(--font-mono);
+  font-size: clamp(72px, 20vh, 240px);
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.stage-clock-date {
+  font-size: clamp(18px, 4vh, 48px);
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-top: clamp(12px, 3vh, 24px);
+}
+
+/* Hold mode */
+.stage-hold-logo {
+  font-family: var(--font-mono);
+  font-size: clamp(24px, 6vh, 72px);
+  font-weight: 300;
+  color: var(--accent);
+  letter-spacing: 8px;
+  text-transform: uppercase;
+}
+
+.stage-hold-event {
+  font-size: clamp(18px, 4vh, 56px);
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-top: clamp(16px, 4vh, 32px);
+  text-align: center;
+  padding: 0 60px;
+}
+
+/* Thin separator line between hold elements */
+.stage-hold-divider {
+  width: clamp(60px, 8vw, 120px);
+  height: 1px;
+  background: var(--border-subtle);
+  margin-top: clamp(12px, 3vh, 24px);
+}
+
+/* Message — replaces cue title area, 75% of countdown scale */
+.stage-message-overlay {
+  /* The native output's message: an ARC-red BAND with ink text, not white text floating over the cue. */
+  /* In the page's lower half: the web layout puts the countdown high, and a band at the top covered its digits
+     (the old white text did the same). */
+  position: absolute;
+  bottom: 12%;
+  left: 3%;
+  right: 3%;
+  height: 20%;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: clamp(28px, 8vw, 150px);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #0B0B0C;
+  background: var(--arc-red);
+  border-radius: 4px;
+  text-align: center;
+  pointer-events: none;
+  z-index: 10;
+  -webkit-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  padding: 0 40px;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+/* TEXT ALERT: louder than a message. Full width, top, ARC red, white heavy type, a slow pulse on its border.
+   Above the message (which waits under it), below a flash. Stays until cleared. */
+.stage-alert-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 22vh;
+  min-height: 64px;
+  display: none;
+  -webkit-box-align: center;
+  align-items: center;
+  padding: 0 3vw;
+  background: var(--arc-red);
+  color: #FFFFFF;
+  font-family: var(--font-mono);
+  z-index: 15;
+  box-sizing: border-box;
+  border: 0.9vh solid rgba(255,255,255,0.15);
+  -webkit-animation: alert-pulse 1.8s ease-in-out infinite;
+  animation: alert-pulse 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+.stage-alert-banner.visible { display: -webkit-box; display: flex; }
+/* While an alert is up the page moves down by the banner's height, so it never covers the countdown. */
+body.alert-up .stage-mode { top: 22vh; height: auto; }
+.stage-alert-tag {
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+  background: #FFFFFF;
+  color: var(--arc-red);
+  font-weight: 800;
+  font-size: clamp(14px, 4.4vh, 60px);
+  padding: 0.1em 0.35em;
+  margin-right: 0.8em;
+  letter-spacing: 0.04em;
+}
+.stage-alert-text {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(24px, 8vh, 140px);
+  line-height: 1.05;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+@-webkit-keyframes alert-pulse {
+  0%, 100% { border-color: rgba(255,255,255,0.15); }
+  50% { border-color: rgba(255,255,255,0.9); }
+}
+@keyframes alert-pulse {
+  0%, 100% { border-color: rgba(255,255,255,0.15); }
+  50% { border-color: rgba(255,255,255,0.9); }
+}
+
+.stage-flash-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  transition: opacity 0.4s ease;
+  opacity: 0;
+}
+
+/* Connection status indicator */
+.connection-status {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: var(--text-tertiary);
+  padding: 3px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 2px;
+  z-index: 30;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.connection-status.visible { opacity: 1; }
+.connection-status.connected { color: var(--timer-green); border-color: rgba(0,200,83,0.2); }
+.connection-status.error { color: var(--timer-red); border-color: rgba(255,23,68,0.2); }
+
+/* Fullscreen */
+body:fullscreen { cursor: none; }

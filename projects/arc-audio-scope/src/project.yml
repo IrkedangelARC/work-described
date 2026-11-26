@@ -1,0 +1,55 @@
+name: ArcAudioScope
+options:
+  bundleIdPrefix: com.example.arc
+  deploymentTarget:
+    iOS: "18.0"
+    macOS: "15.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+packages:
+  # The ONE copy of ARC Style (iOS and macOS).
+  ARCStyle:
+    path: ../arc-style
+  # Every analyzer and model type with no device and no UI. Tested with `swift test`, no app launch.
+  ScopeKit:
+    path: ScopeKit
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    INFOPLIST_KEY_UIApplicationSceneManifest_Generation: true
+    INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: true
+    INFOPLIST_KEY_UILaunchScreen_Generation: true
+    INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+    INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+
+targets:
+  ArcAudioScope:
+    type: application
+    supportedDestinations: [iOS, macOS]
+    sources:
+      - path: ArcAudioScope
+    dependencies:
+      - package: ARCStyle
+      - package: ScopeKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcAudioScope
+        PRODUCT_NAME: ARC Audio Scope
+        MARKETING_VERSION: "0.2.0"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: true
+        INFOPLIST_KEY_NSMicrophoneUsageDescription: "ARC Audio Scope measures sound through the measurement microphone and the console reference input."
+        INFOPLIST_KEY_NSHumanReadableCopyright: "Copyright © 2026 ARC Event Productions. We don't sell failure™."
+        INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.utilities"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        # Exports land in the app's Documents on the iPad. These two show that folder in Files.
+        INFOPLIST_KEY_UIFileSharingEnabled: true
+        INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace: true
+        DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_HARDENED_RUNTIME: true
+        # Without the audio-input entitlement the hardened runtime denies the mic silently, with no prompt.
+        "CODE_SIGN_ENTITLEMENTS[sdk=macosx*]": ArcAudioScope/ArcAudioScope.entitlements

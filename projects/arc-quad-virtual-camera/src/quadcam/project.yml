@@ -1,0 +1,52 @@
+name: ArcQuadCamera
+options:
+  bundleIdPrefix: com.example.arc
+  deploymentTarget:
+    macOS: "14.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    DEVELOPMENT_TEAM: YOUR_TEAM_ID
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_HARDENED_RUNTIME: YES
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "5"
+
+targets:
+  # The host: installs and approves the camera extension (macOS accepts camera extensions only
+  # from a signed native app in /Applications). QUAD itself is JVM and cannot carry one.
+  ArcQuadCamera:
+    type: application
+    platform: macOS
+    sources:
+      - path: QuadCamera
+    dependencies:
+      - target: ArcQuadCameraExtension
+        embed: true
+        codeSign: true
+        copy:
+          destination: plugins
+          subpath: ../Library/SystemExtensions
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcQuadCamera
+        PRODUCT_NAME: ARC QUAD Camera
+        INFOPLIST_FILE: QuadCamera/Info.plist
+        CODE_SIGN_ENTITLEMENTS: QuadCamera/QuadCamera.entitlements
+
+  # The camera extension: publishes "ARC QUAD" to every app on the Mac, fed by QUAD's
+  # GET /program.mjpeg over the LAN (PLAN_quad_virtual_camera.md).
+  ArcQuadCameraExtension:
+    type: system-extension
+    platform: macOS
+    sources:
+      - path: QuadCameraExtension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcQuadCamera.Extension
+        PRODUCT_NAME: com.example.arc.ArcQuadCamera.Extension
+        INFOPLIST_FILE: QuadCameraExtension/Info.plist
+        CODE_SIGN_ENTITLEMENTS: QuadCameraExtension/QuadCameraExtension.entitlements
+        SKIP_INSTALL: YES

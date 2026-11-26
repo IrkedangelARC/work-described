@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>ARC Switcher uses Apple Events to position source windows on the output display and control presentations.</string>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>ARC Switcher uses the local network to accept commands from Bitfocus Companion and StreamDeck controllers.</string>
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_arcswitcher._tcp</string>
+    </array>
+</dict>
+</plist>

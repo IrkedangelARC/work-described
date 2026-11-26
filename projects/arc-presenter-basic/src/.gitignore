@@ -1,0 +1,16 @@
+# Xcode build artifacts
+build/
+*.xcarchive
+*.xcuserdata
+DerivedData/
+*.ipa
+*.pkg
+
+# xcodegen output (regenerable)
+*.xcodeproj
+
+# Profiling
+*.profraw
+
+# macOS
+.DS_Store

@@ -1,0 +1,21 @@
+{
+  "name": "ARC Event Productions",
+  "slug": "arc",
+  "colors": {
+    "primary": "#C1272D",
+    "secondary": "#000000",
+    "accent": "#FFFFFF",
+    "background": "#000000",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#CCCCCC",
+    "extras": {}
+  },
+  "font_primary": "Futura",
+  "font_secondary": "Futura",
+  "font_accent": "Futura",
+  "logo_paths": [
+    "logo/vector-exports/arc_logo_complete.svg"
+  ],
+  "design_notes": "Industrial minimalism. Dark backgrounds, clean type, red accent. NASA control room, not nightclub.",
+  "watermark": null
+}

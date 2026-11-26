@@ -1,0 +1,88 @@
+name: FeedbackHunter
+options:
+  bundleIdPrefix: com.example.arc
+  deploymentTarget:
+    iOS: "16.0"
+    watchOS: "9.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+
+targets:
+  FeedbackHunter:
+    type: application
+    platform: iOS
+    sources:
+      - path: FeedbackHunter
+        excludes:
+          - "**/.DS_Store"
+      - path: Shared
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        INFOPLIST_FILE: FeedbackHunter/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.FeedbackHunter
+        TARGETED_DEVICE_FAMILY: "2"  # iPad only
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: false
+    # Watch dependency disabled for initial build - enable once signing is configured
+    # dependencies:
+    #   - target: FeedbackHunterWatch
+    #     embed: true
+
+  FeedbackHunterWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - path: FeedbackHunterWatch
+        excludes:
+          - "**/.DS_Store"
+      - path: Shared
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        INFOPLIST_FILE: FeedbackHunterWatch/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.FeedbackHunter.watchkitapp
+        WATCHOS_DEPLOYMENT_TARGET: "9.0"
+        SDKROOT: watchos
+
+  FeedbackHunterTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+        excludes:
+          - "**/.DS_Store"
+    dependencies:
+      - target: FeedbackHunter
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.FeedbackHunterTests
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGNING_ALLOWED: NO
+
+schemes:
+  FeedbackHunter:
+    build:
+      targets:
+        FeedbackHunter: all
+        FeedbackHunterWatch: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - FeedbackHunterTests
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release

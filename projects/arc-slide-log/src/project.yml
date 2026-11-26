@@ -1,0 +1,84 @@
+name: ArcSlideLog
+options:
+  bundleIdPrefix: com.example.arc
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "16.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: 3
+    GENERATE_INFOPLIST_FILE: true
+    INFOPLIST_KEY_NSHumanReadableCopyright: "© ARC Event Productions. We don't sell failure™."
+    INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.video"
+    # A menu bar app: no Dock icon, no window.
+    INFOPLIST_KEY_LSUIElement: true
+    INFOPLIST_KEY_NSScreenCaptureUsageDescription: "ARC Slide Log records a very low resolution copy of the program display, with the presentation's sound, so the edit can rebuild the click-through."
+    INFOPLIST_KEY_NSMicrophoneUsageDescription: "ARC Slide Log records a low-quality scratch track from the laptop so the edit can line the log up with the cameras."
+    INFOPLIST_KEY_NSInputMonitoringUsageDescription: "ARC Slide Log logs the clicker's presses with their times. It records which keys, never what you type."
+    INFOPLIST_KEY_NSDocumentsFolderUsageDescription: "ARC Slide Log writes its sessions to Documents/ARC Slide Logs."
+    ENABLE_HARDENED_RUNTIME: true
+    ENABLE_APP_SANDBOX: false
+    CODE_SIGN_STYLE: Manual
+    # Real Developer ID, not adhoc: an adhoc re-sign on every rebuild resets the Screen Recording,
+    # Microphone and Input Monitoring grants (arc-capture and arc-assimilator carry the same note).
+    CODE_SIGN_IDENTITY: "Developer ID Application: YOUR NAME (YOUR_TEAM_ID)"
+    OTHER_CODE_SIGN_FLAGS: "--timestamp --options=runtime"
+    PRODUCT_NAME: "ARC Slide Log"
+
+# ARCShowFormat: the SLIDE TRACK session format (SlideTrack, SlideTrackWriter, ShowLogCore) shared with
+# Presenter (path A) and ARC Edit's importer.
+packages:
+  ARCShowFormat:
+    path: ../arc-show-format
+
+targets:
+  ArcSlideLog:
+    type: application
+    platform: macOS
+    sources:
+      - path: ArcSlideLog
+    dependencies:
+      - package: ARCShowFormat
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcSlideLog
+        PRODUCT_MODULE_NAME: ArcSlideLog
+        CODE_SIGN_ENTITLEMENTS: ArcSlideLog/ArcSlideLog.entitlements
+        INFOPLIST_KEY_NSPrincipalClass: NSApplication
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+  ArcSlideLogTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: ArcSlideLogTests
+    dependencies:
+      - target: ArcSlideLog
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcSlideLogTests
+        PRODUCT_NAME: ArcSlideLogTests
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/ARC Slide Log.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ARC Slide Log"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        GENERATE_INFOPLIST_FILE: true
+        DEVELOPMENT_TEAM: "YOUR_TEAM_ID"
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: Automatic
+
+schemes:
+  ArcSlideLog:
+    build:
+      targets:
+        ArcSlideLog: all
+        ArcSlideLogTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - ArcSlideLogTests
+    archive:
+      config: Release

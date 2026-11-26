@@ -1,0 +1,91 @@
+name: ArcCapture
+options:
+  bundleIdPrefix: com.example.arc
+  deploymentTarget:
+    macOS: "15.0"
+  xcodeVersion: "16.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "3.4.2"
+    CURRENT_PROJECT_VERSION: 30
+    GENERATE_INFOPLIST_FILE: true
+    INFOPLIST_KEY_NSHumanReadableCopyright: "© ARC Event Productions. We don't sell failure™."
+    INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.video"
+    INFOPLIST_KEY_NSScreenCaptureUsageDescription: "ARC Capture needs screen recording permission to capture PowerPoint slideshow output."
+    INFOPLIST_KEY_NSAppleEventsUsageDescription: "ARC Capture needs automation permission to control PowerPoint slideshow playback."
+    INFOPLIST_KEY_NSDesktopFolderUsageDescription: "ARC Capture reads the deck you choose and writes the capture next to it."
+    INFOPLIST_KEY_NSDocumentsFolderUsageDescription: "ARC Capture reads the deck you choose and writes the capture next to it."
+    INFOPLIST_KEY_NSDownloadsFolderUsageDescription: "ARC Capture reads the deck you choose and writes the capture next to it."
+    # Info.plist additions beyond INFOPLIST_KEY_*: the arcdeck package type
+    # (exported by ARC Presenter, imported here so our output shows as one
+    # document, not a folder, on a Mac that has only Capture).
+    INFOPLIST_FILE: ArcCapture/Info.plist
+    ENABLE_HARDENED_RUNTIME: true
+    ENABLE_APP_SANDBOX: false
+    CODE_SIGN_STYLE: Manual
+    # Real Developer ID, not adhoc: an adhoc re-sign on every rebuild resets
+    # the Screen Recording and Automation grants (the sibling apps learned
+    # this the hard way; arc-assimilator/project.yml carries the same note).
+    CODE_SIGN_IDENTITY: "Developer ID Application: YOUR NAME (YOUR_TEAM_ID)"
+    OTHER_CODE_SIGN_FLAGS: "--timestamp --options=runtime"
+    PRODUCT_NAME: "ARC Capture"
+
+# V3: the show-folder generation. ARCShowFormat is the contract with Presenter
+# (typed manifest, show.json, deck verifier, show log core).
+packages:
+  ARCShowFormat:
+    path: ../arc-show-format
+  ARCStyle:
+    path: ../arc-style
+
+targets:
+  ArcCapture:
+    type: application
+    platform: macOS
+    sources:
+      - path: ArcCapture
+        excludes:
+          - "Info.plist"
+    dependencies:
+      - package: ARCShowFormat
+      - package: ARCStyle
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcCapture
+        CODE_SIGN_ENTITLEMENTS: ArcCapture/ArcCapture.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+
+  # Engine unit tests. App sources are compiled INTO the bundle (minus @main)
+  # so tests run without launching the app: no window, no TCC.
+  ArcCaptureTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: ArcCaptureTests
+      - path: ArcCapture
+        excludes:
+          - "App/ArcCaptureApp.swift"
+          - "Info.plist"
+    dependencies:
+      - package: ARCShowFormat
+      - package: ARCStyle
+    settings:
+      base:
+        PRODUCT_NAME: ArcCaptureTests
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.arc.ArcCaptureTests
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+        OTHER_CODE_SIGN_FLAGS: ""
+        ENABLE_HARDENED_RUNTIME: false
+
+schemes:
+  ArcCapture:
+    build:
+      targets:
+        ArcCapture: all
+    test:
+      targets:
+        - ArcCaptureTests

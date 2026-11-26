@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "name": "ARC Event Productions",
+    "decided": "2026-09-18",
+    "rule": "ONE red, everywhere. This file is the authority for every ARC colour, font and chrome constant. Code imports it (arc_brand.py) or is diffed against it (tools/check_brand_sync.py). Never restate a value in prose.",
+    "red_decision": "2026-09-18: the logo red wins. #C1272D is the colour the mark is drawn in (logo/source/Ver 10.ai, decals, print). It replaced #C8102E (screen), #C41E3A (documents) and #A61C1C (Fusion, and a wrong hex in LOGO_ANATOMY.md).",
+    "history": {
+      "#C8102E": "screen accent 2026-08-29 to 2026-09-18 (QuadTheme.kt, ARCStyle, icons)",
+      "#C41E3A": "document red to 2026-09-18 (report generator)",
+      "#A61C1C": "Fusion / arc.json and the recoloured vector logo exports to 2026-09-18"
+    }
+  },
+  "red": "#C1272D",
+  "tagline": {
+    "_note": "2026-10-17: the ARC tagline. Every surface reads it from here, never a restated string. Trademark application filed 2026-10-17; show the TM until registration, then switch to the registered mark.",
+    "text": "We don't sell failure.",
+    "caps": "WE DON'T SELL FAILURE",
+    "mark": "™",
+    "registered": false
+  },
+  "screen": {
+    "_note": "Dark ground control surfaces. Origin: arc-ptz QuadTheme.kt and the karaoke module language. Swift copy: arc-style/Sources/ARCStyle/ARCTheme.swift.",
+    "ink": "#0B0B0C",
+    "moduleBg": "#101113",
+    "panelBg": "#161719",
+    "subGroup": "#26282C",
+    "appGrey": "#383838",
+    "line": "#2C2E31",
+    "text0": "#E8E8EA",
+    "text1": "#8B8D92",
+    "text2": "#5E6066",
+    "accent": "#C1272D",
+    "live": "#2FBF71",
+    "warn": "#E6C229",
+    "secOrange": "#E09143",
+    "secBlue": "#5B8DD9",
+    "secGreen": "#57B368",
+    "secCrimson": "#C24B5A",
+    "secRed": "#DB4C4C",
+    "_roles": {
+      "_rule": "Signal-flow stages, 2026-09-18: blue IN, orange HANDS (operate), green EYES (monitor), crimson OUT, red ON AIR. Modules sit in signal order, in on the left, out on the right. Live green and warn yellow are STATES, never section bands.",
+      "accent": "the mark, LIVE and danger only. Never a section band.",
+      "secBlue": "IN: what comes into the system. Sources, deck, next, browse, tracking, transport of a feed. Paper: inputs, cameras, mics.",
+      "secOrange": "OPERATE: what the operator's hands are on. Camera motion, run order, NOW, stage mode, options, test pattern. Paper: crew actions, cues, run-of-show steps.",
+      "secGreen": "MONITOR: readouts and results, never an action. Timer, scopes, network, result, queue state, captured. Paper: measurements, results, pass rows.",
+      "secCrimson": "OUT: what leaves the box. Outputs, video out, key output, program feed. Paper: outputs, deliverables, recordings.",
+      "subGroup": "GROUND, one step up: the labelled grey panel that holds related controls INSIDE a module. 2026-09-21: brightened from #1C1D20 so the boxes read against the module interior. Sits between moduleBg and appGrey and must stay clearly below the chips.",
+      "text2": "STRUCTURE: no signal role. Header bars, help, notes, neutral bands; appGrey is the ground and the paper table header.",
+      "secRed": "small red type on ink (4.9:1; the accent is 3.5:1 there). Record indicators in QUAD.",
+      "live": "STATE: on air / ready, only that.",
+      "warn": "STATE: adjusted since recall, attention."
+    },
+    "chrome": {
+      "gap": 6,
+      "modulePad": 8,
+      "cornerRadius": 6,
+      "borderWidth": 1.5,
+      "moduleTitleSize": 11,
+      "moduleHeaderExtra": 9,
+      "textFloor": 12,
+      "_bracket": "2026-09-18: THE BRACKET. Band title LEFT-aligned in the section colour; the border thickened to a rule down the leading edge; the module's value in a square ink cap at the band's trailing end, split off by a gap of module ground; related controls as one BANK split by a gap of ground with flat corners on the outer ends only. No curve but ARC's own 6 pt corner. The preview/picture never gets it.",
+      "leftRule": 4,
+      "capGap": 2,
+      "bankGap": 2,
+      "bankRadius": 4,
+      "titleAlign": "leading"
+    }
+  },
+  "print": {
+    "_note": "Light ground documents: ReportLab PDFs, matplotlib figures, handouts. Consumer: the report generator's brand module. Table header and the chart neutral are the screen appGrey so a chart and a console agree.",
+    "red": "#C1272D",
+    "redDark": "#8B1A1A",
+    "redDeeper": "#6B0F0F",
+    "black": "#1A1A1A",
+    "gray": "#4A4A4A",
+    "grayMid": "#6C757D",
+    "grayLight": "#E9ECEF",
+    "white": "#FFFFFF",
+    "paper": "#F4F4F7",
+    "tableHeader": "#383838",
+    "tableAlt": "#F4F4F7",
+    "tableGrid": "#D0D0D0",
+    "tableTotalBg": "#E8E0E0",
+    "sectionBg": "#E8E8E8",
+    "peakMicBg": "#FFF3E0",
+    "livestreamBg": "#E3F2FD",
+    "noteBg": "#FFF3CD",
+    "noteText": "#856404",
+    "chart": {
+      "_note": "Series order for matplotlib. The screen section palette, so colours mean the same thing on paper and on a console.",
+      "series": [
+        "#C1272D",
+        "#383838",
+        "#5B8DD9",
+        "#E09143",
+        "#57B368",
+        "#8B8D92"
+      ],
+      "warn": "#E09143",
+      "good": "#57B368",
+      "bg": "#F4F4F7"
+    },
+    "chrome": {
+      "_note": "The bracket on paper: a hairline box in the section colour with a 3 pt rule on the left, a 16 pt band with the title left-aligned and the value in an ink cap. At most two per page.",
+      "rule": 3,
+      "band": 16,
+      "box": 0.75,
+      "capGap": 1.5
+    }
+  },
+  "motion": {
+    "_note": "Fusion lower thirds, staff cards, ATEM media pool. Consumer: arc-design/brands/arc.json (7-key BrandProfile schema shared with client brand files), checked by tools/check_brand_sync.py.",
+    "primary": "#C1272D",
+    "secondary": "#000000",
+    "accent": "#FFFFFF",
+    "background": "#000000",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#CCCCCC"
+  },
+  "type": {
+    "document": "Futura",
+    "document_note": "Every ARC document, diagram, PDF, slide and icon label. Approved 2026-04-25 as the closest match to Century Gothic.",
+    "console": "system monospace",
+    "console_note": "Module bands, chips, readouts on control surfaces: heavy, uppercase, tracked. Sized through ARCTheme.mono(designSize): floor 12 pt, readouts 18 pt and up untouched.",
+    "motion": "Futura",
+    "futura_ttc": "/System/Library/Fonts/Supplemental/Futura.ttc",
+    "futura_ttc_indices": {
+      "regular": 0,
+      "italic": 1,
+      "bold": 2
+    }
+  },
+  "logo": {
+    "source": "arc-design/logo/source/Ver 10.ai",
+    "vector_mark": "arc-laser/assets/engrave-ready/ARC_mark.svg",
+    "vector_complete": "arc-design/logo/vector-exports/arc_logo_complete.svg",
+    "raster_lockup": "arc-design/logo/raster-exports/arc_logo.png",
+    "measured": "raster export samples #C02028 (64.6 % of red pixels); the Illustrator PDF triple (0.757, 0.153, 0.176) is #C1272D",
+    "library": "arc-style/brand/logos/INDEX.md (every variant; rebuild: python3 tools/collect_logos.py). Front of video = stills_16x9/ARC 16x9 test v4.jpg, end = animated/Animated logo trimed.mp4"
+  },
+  "layout": {
+    "print": {
+      "page": "letter",
+      "marginTop": 0.85,
+      "marginBottom": 0.75,
+      "marginLeft": 0.75,
+      "marginRight": 0.75
+    },
+    "screen_law": "ARC control-surface standard: one given quantity, one geometry chain, no accidental remainders, alignment from identical construction, fixed tools / flexible picture."
+  }
+}
